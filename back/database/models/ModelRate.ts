@@ -1,39 +1,40 @@
 import {
   Model,
-  DataTypes,
-  Sequelize,
   ForeignKey,
   InferAttributes,
   InferCreationAttributes,
 } from "sequelize";
 
-const User = require("./ModelUser");
-const Product = require("./ModelProduct");
+module.exports = (sequelize: any, DataTypes: any) => {
+  class Rate extends Model<
+    InferAttributes<Rate>,
+    InferCreationAttributes<Rate>
+  > {
+    declare idOrder: number;
+    declare rate: Number;
+    declare comment: String;
+    declare idUser: ForeignKey<number>;
+    declare idProduct: ForeignKey<number>;
+    static associate(models: any) {
+      Rate.belongsTo(models.User, {
+        targetKey: "idUser",
+      });
+      Rate.belongsTo(models.Product, { foreignKey: "idProduct" });
+    }
+  }
 
-const sequelize = new Sequelize("mysql://root:asd123@localhost:3306/mydb");
+  Rate.init(
+    {
+      idOrder: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      rate: { type: DataTypes.INTEGER, allowNull: false },
+      comment: { type: DataTypes.STRING, allowNull: false },
+    },
+    { modelName: "Rate", sequelize }
+  );
 
-class Rate extends Model<InferAttributes<Rate>, InferCreationAttributes<Rate>> {
-  declare idOrder: number;
-  declare rate: Number;
-  declare comment: String;
-  declare idUser: ForeignKey<number>;
-  declare idProduct: ForeignKey<number>;
-}
-
-Rate.init(
-  {
-    idOrder: { type: DataTypes.NUMBER, autoIncrement: true, primaryKey: true },
-    rate: { type: DataTypes.NUMBER, allowNull: false },
-    comment: { type: DataTypes.STRING(128), allowNull: false },
-  },
-  { tableName: "rate", sequelize }
-);
-
-Rate.belongsTo(User, {
-  targetKey: "artistID",
-});
-//
-Rate.hasOne(Product, { sourceKey: "idProduct" });
-//source key is the primary key of the model that belongs to rate
-
-module.exports = Rate;
+  return Rate;
+};

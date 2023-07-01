@@ -6,28 +6,33 @@ import {
   InferCreationAttributes,
 } from "sequelize";
 
-const sequelize = new Sequelize("mysql://root:asd123@localhost:3306/mydb");
+module.exports = (sequelize: any, DataTypes: any) => {
+  class Product extends Model<
+    InferAttributes<Product>,
+    InferCreationAttributes<Product>
+  > {
+    declare idProduct: number;
+    declare productName: String;
+    declare productDescription: String;
+    static associate(models: any) {
+      Product.belongsToMany(models.Cart, {
+        through: "CartProduct",
+      });
+    }
+  }
 
-class Product extends Model<
-  InferAttributes<Product>,
-  InferCreationAttributes<Product>
-> {
-  declare idProduct: number;
-  declare productName: String;
-  declare productDescription: String;
-}
-
-Product.init(
-  {
-    idProduct: {
-      type: DataTypes.NUMBER,
-      autoIncrement: true,
-      primaryKey: true,
+  Product.init(
+    {
+      idProduct: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      productName: { type: DataTypes.STRING, allowNull: false },
+      productDescription: { type: DataTypes.STRING, allowNull: false },
     },
-    productName: { type: new DataTypes.STRING(128), allowNull: false },
-    productDescription: { type: new DataTypes.STRING(128), allowNull: false },
-  },
-  { tableName: "product", sequelize }
-);
+    { modelName: "Product", sequelize }
+  );
 
-module.exports = Product;
+  return Product;
+};
