@@ -11,7 +11,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     InferAttributes<Product>,
     InferCreationAttributes<Product>
   > {
-    declare idProduct: number;
+    declare id: number;
     declare productName: String;
     declare productDescription: String;
     static associate(models: any) {
@@ -23,13 +23,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
   Product.init(
     {
-      idProduct: {
+      id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
       productName: { type: DataTypes.STRING, allowNull: false },
-      productDescription: { type: DataTypes.STRING, allowNull: false },
+      productDescription: { type: DataTypes.STRING, allowNull: false }, 
     },
     { modelName: "Product", sequelize }
   );

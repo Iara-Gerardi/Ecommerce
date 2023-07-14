@@ -10,20 +10,20 @@ module.exports = (sequelize: any, DataTypes: any) => {
     InferAttributes<Cart>,
     InferCreationAttributes<Cart>
   > {
-    declare idCart: number;
+    declare id: number;
     declare orderDate: Date;
     declare totalPrice: Number;
     declare idOrder: ForeignKey<number>;
     declare idCustomer: ForeignKey<number>;
     static associate(models: any) {
-      Cart.belongsTo(models.User);
-      Cart.hasMany(models.Product);
+      Cart.belongsTo(models.User, { foreignKey: "userId" });
+      Cart.belongsToMany(models.Product, { through: models.CartProduct });
     }
   }
 
   Cart.init(
     {
-      idCart: {
+      id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,

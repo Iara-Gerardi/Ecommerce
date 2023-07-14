@@ -10,22 +10,20 @@ module.exports = (sequelize: any, DataTypes: any) => {
     InferAttributes<Rate>,
     InferCreationAttributes<Rate>
   > {
-    declare idOrder: number;
+    declare id: number;
     declare rate: Number;
     declare comment: String;
     declare idUser: ForeignKey<number>;
     declare idProduct: ForeignKey<number>;
     static associate(models: any) {
-      Rate.belongsTo(models.User, {
-        targetKey: "idUser",
-      });
-      Rate.belongsTo(models.Product, { foreignKey: "idProduct" });
+      Rate.belongsTo(models.User, { foreignKey: "userId" });
+      Rate.belongsTo(models.Product, { foreignKey: "productId" });
     }
   }
 
   Rate.init(
     {
-      idOrder: {
+      id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
